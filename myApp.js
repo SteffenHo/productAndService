@@ -25,9 +25,12 @@ app.get("/product", async (req, res) => {
 });
 
 app.put("/product", async(req, res) => {
-  let result = await repo.updateProduct(req.body);
-  res.status(result.status);
-  res.json(result.json);
+  semaphore.take(async () => {
+    let result = await repo.updateProduct(req.body);
+    res.status(result.status);
+    res.json(result.json);
+    semaphore.leave();
+  });
 })
 
 app.get("/product/:id", async (req, res) => {
@@ -49,9 +52,12 @@ app.get("/product/:id/dependencies", async (req, res) => {
 });
 
 app.put("/product/:id/dependencies", async (req, res) => {
-  let result = await repo.addDependencies(req.params.id, req.body);
-  res.status(result.status);
-  res.json(result.json);
+  semaphore.take(async () => {
+    let result = await repo.addDependencies(req.params.id, req.body);
+    res.status(result.status);
+    res.json(result.json);
+    semaphore.leave();
+  });
 });
 
 module.exports = app;

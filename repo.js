@@ -19,9 +19,22 @@ function parseArray(arrayStr) {
 
 async function getProducts() {
     let json = await csvtojson().fromFile(productsAndServicesPath);
+    let parsedJson = [];
+    for (let i = 0; i < json.length; i++) {
+        parsedJson.push({
+            id: parseInt(json[i].id),
+            name: json[i].name,
+            category: parseInt(json[i].category),
+            description: json[i].description,
+            department: json[i].department,
+            serviceLevel: parseInt(json[i].serviceLevel),
+            externalPatners: json[i].externalPatners,
+            otherDepartments: json[i].otherDepartments
+        });
+    }
     return {
         status: 200,
-        json: json
+        json: parsedJson
     }
 }
 
@@ -31,7 +44,7 @@ async function searchProduct(field, value) {
     let status = result.status;
     let json = result.json;
     for (let i = 0; i < json.length; i++) {
-        if (json[i][field] == value) {
+        if (json[i][field] === value) {
             products.push(json[i]);
         }
     }
@@ -48,9 +61,8 @@ async function createNewProduct(reqBody) {
     let id = 1;
         let products = (await getProducts()).json;
         for (let i = 0; i < products.length; i++) {
-            let productId = parseInt(products[i].id);
-            if (productId >= id) {
-                id = productId + 1;
+            if (products[i].id >= id) {
+                id = products[i].id + 1;
             }
         }
 
@@ -84,13 +96,13 @@ async function updateProduct(reqBody) {
     let status = result.status;
     for (let i = 0; i < products.length; i++) {
         product = products[i];
-        if (product.id == reqBody.id) {
+        if (product.id === reqBody.id) {
             foundId = true;
             product.name = reqBody.name;
-            product.category = reqBody.category;
+            product.category = parseInt(reqBody.category);
             product.description = reqBody.description;
             product.department = reqBody.department;
-            product.serviceLevel = reqBody.serviceLevel;
+            product.serviceLevel = parseInt(reqBody.serviceLevel);
             product.externalPatners = reqBody.externalPatners;
             product.otherDepartments = reqBody.otherDepartments;
             break;

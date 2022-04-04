@@ -44,7 +44,7 @@ async function searchProduct(field, value) {
     let status = result.status;
     let json = result.json;
     for (let i = 0; i < json.length; i++) {
-        if (json[i][field] === value) {
+        if (json[i][field] == value) {
             products.push(json[i]);
         }
     }

@@ -129,7 +129,9 @@ async function getDependencies() {
     for (let i = 0; i < json.length; i++) {
         parsedJson.push({
             id: parseInt(json[i].id),
-            dependencies: parseArray(json[i].dependencies)
+            dependencies: parseArray(json[i].dependencies),
+            noDependencies: parseArray(json[i].noDependencies),
+            multiDependencies: parseArray(json[i].multiDependencies)
         });
     }
     return {

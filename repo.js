@@ -164,7 +164,9 @@ async function searchDependencies(id) {
 async function addDependencies(id, reqBody) {
     const product = {
         id: id,
-        dependencies: reqBody.dependencies
+        dependencies: reqBody.dependencies,
+        noDependencies: reqBody.noDependencies,
+        multiDependencies: reqBody.multiDependencies
     }
 
     let result = await getDependencies();
@@ -180,7 +182,7 @@ async function addDependencies(id, reqBody) {
     }
 
     if (foundId != -1) {
-        json[foundId].dependencies = product.dependencies;
+        json[foundId] = product;
     } else {
         json.push(product);
     }
